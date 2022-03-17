@@ -5,6 +5,7 @@ import jwt_decode from 'jwt-decode';
 import Login from '../Login/Login';
 import Signup from '../Signup/Signup';
 import NewProduct from '../Products/NewProduct';
+import ProductsPage from '../Products/ProductsPage';
 import PrivateRoute from '../auth/PrivateRoute';
 import useToken from './useToken';
 import './App.css';
@@ -29,6 +30,11 @@ function App() {
                     <Route path='/admin/products/new' element={
                         <PrivateRoute token={token}>
                             <NewProduct userId={userId} userRole={userRole} />
+                        </PrivateRoute>}>
+                    </Route>
+                    <Route path='/admin/products' element={
+                        <PrivateRoute token={token}>
+                            <ProductsPage userId={userId} userRole={userRole} />
                         </PrivateRoute>}>
                     </Route>
                 </Routes>
