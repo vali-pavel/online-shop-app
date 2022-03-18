@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { Button, Form } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+
+import './Login.css';
 
 async function loginUser(credentials) {
     return fetch('/api/users/login', {
@@ -41,21 +45,22 @@ export default function Login({ setToken }) {
 
     return (
         <div className="login-wrapper">
-            <h1>Please Log In</h1>
+            <h1>Log In</h1>
             {error}
-            <form onSubmit={handleSubmit}>
-                <label>
-                    <p>Email</p>
-                    <input type="text" onChange={e => setEmail(e.target.value)} />
-                </label>
-                <label>
-                    <p>Password</p>
-                    <input type="password" onChange={e => setPassword(e.target.value)} />
-                </label>
-                <div>
-                    <button type="submit">Submit</button>
+            <Form onSubmit={handleSubmit}>
+                <Form.Group>
+                    <Form.Label>Email</Form.Label>
+                    <Form.Control type="email" onChange={e => setEmail(e.target.value)}></Form.Control>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control type="password" onChange={e => setPassword(e.target.value)}></Form.Control>
+                </Form.Group>
+                <div className='d-flex justify-content-between align-items-center'>
+                    <Button type="submit">Log In</Button>
+                    <Link to="/signup">Create account</Link>
                 </div>
-            </form>
+            </Form>
         </div>
     )
 }
