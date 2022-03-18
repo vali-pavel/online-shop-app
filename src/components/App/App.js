@@ -7,6 +7,7 @@ import Signup from '../Signup/Signup';
 import NewProduct from '../Products/NewProduct';
 import ProductsPage from '../Products/ProductsPage';
 import PrivateRoute from '../auth/PrivateRoute';
+import AccountPage from '../Account/AccountPage';
 import useToken from './useToken';
 import './App.css';
 
@@ -35,6 +36,11 @@ function App() {
                     <Route path='/admin/products' element={
                         <PrivateRoute token={token}>
                             <ProductsPage userId={userId} userRole={userRole} />
+                        </PrivateRoute>}>
+                    </Route>
+                    <Route path='/account' element={
+                        <PrivateRoute token={token}>
+                            <AccountPage userId={userId} userRole={userRole} />
                         </PrivateRoute>}>
                     </Route>
                 </Routes>

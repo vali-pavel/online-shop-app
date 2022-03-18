@@ -8,6 +8,12 @@ module.exports = function (app) {
         })
     );
     app.use(
+        createProxyMiddleware('/api/customers', {
+            target: 'http://localhost:8002/',
+            changeOrigin: true,
+        })
+    );
+    app.use(
         createProxyMiddleware('/api/products', {
             target: 'http://localhost:8003/',
             changeOrigin: true,
