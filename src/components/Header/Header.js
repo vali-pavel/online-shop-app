@@ -13,10 +13,17 @@ export default function Header({ userRole }) {
         window.location.href = "/account";
     }
 
+    const handleProducts = () => {
+        window.location.href = "/products";
+    }
+
     return (
-        <div className="d-flex justify-content-right">
-            {userRole === userRoles.Customer && <Button variant="outline-primary" size="sm" onClick={handleCustomerEdit}>Edit Account</Button>}
-            <Button variant="outline-primary" size="sm" onClick={handleSignout}>Sign out</Button>
+        <div className="d-flex justify-content-between">
+            <div><Button variant="outline-primary" size="sm" onClick={handleProducts}>Products</Button></div>
+            <div>
+                {userRole === userRoles.Customer && <Button variant="outline-primary" size="sm" onClick={handleCustomerEdit}>Edit Account</Button>}
+                <Button variant="outline-primary" size="sm" onClick={handleSignout}>Sign out</Button>
+            </div>
         </div>
     )
 }
