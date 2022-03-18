@@ -10,7 +10,7 @@ import { userRoles } from '../enums';
 const tokenString = localStorage.getItem('token');
 
 async function createProduct(newProduct) {
-    return fetch('/products', {
+    return fetch('/api/products', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -37,7 +37,7 @@ async function uploadImages({ productId, images }) {
         formData.append('files', new Blob([image]), image.name)
     }
 
-    return fetch('/products/upload', {
+    return fetch('/api/products/upload', {
         method: 'POST',
         headers: {
             'authorization': tokenString

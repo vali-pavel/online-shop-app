@@ -7,7 +7,7 @@ import './Signup.css'
 import { userRoles } from '../enums';
 
 async function createUser(credentials) {
-    return fetch('/users', {
+    return fetch('/api/users', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
