@@ -32,6 +32,7 @@ export default function Login({ setToken }) {
         });
         if (loginResponse.token) {
             setToken(loginResponse.token)
+            window.location.href = '/products'
         } else {
             setError(loginResponse.error.detail)
         }

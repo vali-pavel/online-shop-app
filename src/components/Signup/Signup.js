@@ -46,6 +46,7 @@ export default function Signup({ setToken }) {
         });
         if (response.token) {
             setToken(response.token)
+            window.location.href = '/products'
         } else {
             setError(response.error.detail)
         }
