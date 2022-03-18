@@ -90,7 +90,10 @@ export default function ProductsPage({ userId, userRole }) {
                         </Col>}
                     </Row>
                 </div>)}
-                <PaginationComponent totalPages={totalPages} setCurrentPage={setCurrentPage}></PaginationComponent>
+                <div className="d-flex justify-content-between">
+                    <PaginationComponent totalPages={totalPages} setCurrentPage={setCurrentPage}></PaginationComponent>
+                    {userRole === userRoles.Merchant && <Link to='/admin/products/new'>Add New</Link>}
+                </div>
             </Container> : "No Products"}
         </div>
     )
