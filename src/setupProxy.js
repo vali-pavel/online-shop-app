@@ -13,4 +13,10 @@ module.exports = function (app) {
             changeOrigin: true,
         })
     );
+    app.use(
+        createProxyMiddleware('/api/orders', {
+            target: 'http://localhost:8004/',
+            changeOrigin: true,
+        })
+    );
 }
