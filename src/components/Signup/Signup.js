@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form'
+import { Button, Form } from 'react-bootstrap';
 
 import './Signup.css'
 import { userRoles } from '../enums';
 
 async function createUser(credentials) {
-    return fetch('/users', {
+    return fetch('/api/users', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -46,6 +45,7 @@ export default function Signup({ setToken }) {
         });
         if (response.token) {
             setToken(response.token)
+            window.location.href = '/products'
         } else {
             setError(response.error.detail)
         }

@@ -1,0 +1,19 @@
+.new-product-wrapper {
+    width: 60%;
+    padding-left: 25px;
+}
+
+.img-carousel {
+    width: 300px;
+}
+
+.product-wrapper {
+    display: flex;
+    margin-left: 25px;
+    flex-direction: column;
+    width:300px;
+}
+
+.form-select.category-filter {
+    width: 30%;
+}
