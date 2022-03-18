@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 
-export default function Checkout({ userId, productId, quantity = 1 }) {
+export default function Checkout({ userId, productId, quantity = 1, setError, setSuccess }) {
     const handleCheckout = () => {
         const tokenString = localStorage.getItem('token');
         const body = {
@@ -20,10 +20,10 @@ export default function Checkout({ userId, productId, quantity = 1 }) {
         })
             .then(async response => {
                 if (!response.ok) {
-                    return { error: await response.json() }
-                }
-                return {
-                    token: response.text()
+                    const errorMessage = await response.json();
+                    setError(errorMessage.detail);
+                } else {
+                    setSuccess(true);
                 }
             })
     }
@@ -36,5 +36,6 @@ export default function Checkout({ userId, productId, quantity = 1 }) {
 Checkout.propTypes = {
     userId: PropTypes.number.isRequired,
     productId: PropTypes.number.isRequired,
-    quantity: PropTypes.number
+    quantity: PropTypes.number,
+    setError: PropTypes.func,
 }

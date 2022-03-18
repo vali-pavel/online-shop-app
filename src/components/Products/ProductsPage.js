@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Col, Row, Container } from 'react-bootstrap';
+import { Col, Row, Container, Alert } from 'react-bootstrap';
 
 import { userRoles } from '../enums';
 import Checkout from '../Checkout/Checkout';
@@ -12,7 +12,8 @@ export default function ProductsPage({ userId, userRole }) {
     const [products, setProducts] = useState();
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const [error, setError] = useState()
+    const [error, setError] = useState();
+    const [success, setSuccess] = useState(false);
 
     useEffect(() => {
         setLoading(true);
@@ -32,7 +33,7 @@ export default function ProductsPage({ userId, userRole }) {
                 .then(async response => {
                     const jsonResponse = await response.json()
                     if (!response.ok) {
-                        setError({ error: jsonResponse.error.detail })
+                        setError(jsonResponse.error.detail)
                     } else {
                         setProducts(jsonResponse)
                     }
@@ -49,7 +50,8 @@ export default function ProductsPage({ userId, userRole }) {
 
     return (
         <div>
-            {error}
+            {error && <Alert variant="danger" onClose={() => setError(null)} dismissible>{error}</Alert>}
+            {success && <Alert variant="success" onClose={() => setSuccess(false)} dismissible>Order was submitted</Alert>}
             {products !== undefined ? <Container>
                 {products.items.map((product, index) => <div key={product.id}>
                     {index === 0 && <Row>
@@ -61,7 +63,11 @@ export default function ProductsPage({ userId, userRole }) {
                         <Col className="product-name">{product.name}</Col>
                         <Col className="product-price">{product.price}</Col>
                         {userRole === userRoles.Customer && <Col xs={2}>
-                            <Checkout userId={userId} productId={product.id} />
+                            <Checkout
+                                userId={userId}
+                                productId={product.id}
+                                setSuccess={setSuccess}
+                                setError={setError} />
                         </Col>}
                     </Row>
                 </div>)}
