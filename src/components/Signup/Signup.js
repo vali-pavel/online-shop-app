@@ -18,7 +18,7 @@ async function createUser(credentials) {
                 return { error: await response.json() }
             }
             return {
-                token: response.text()
+                token: await response.text()
             }
         })
 }
