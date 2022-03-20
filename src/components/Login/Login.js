@@ -50,11 +50,11 @@ export default function Login({ setToken }) {
             <Form onSubmit={handleSubmit}>
                 <Form.Group>
                     <Form.Label>Email</Form.Label>
-                    <Form.Control type="email" onChange={e => setEmail(e.target.value)}></Form.Control>
+                    <Form.Control name="email" type="email" onChange={e => setEmail(e.target.value)}></Form.Control>
                 </Form.Group>
                 <Form.Group>
                     <Form.Label>Password</Form.Label>
-                    <Form.Control type="password" onChange={e => setPassword(e.target.value)}></Form.Control>
+                    <Form.Control name="password" type="password" onChange={e => setPassword(e.target.value)}></Form.Control>
                 </Form.Group>
                 <div className='d-flex justify-content-between align-items-center'>
                     <Button type="submit">Log In</Button>
