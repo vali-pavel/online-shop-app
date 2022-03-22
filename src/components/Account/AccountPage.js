@@ -6,9 +6,18 @@ import './AccountPage.css';
 export default function AccountPage({ userId }) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState()
-    const [account, setAccount] = useState({ cardExpiration: "2022-03" })
+    const [account, setAccount] = useState({})
     const [customerId, setCustomerId] = useState()
     const tokenString = localStorage.getItem('token');
+
+    const formatExpirationDate = (expiration_date) => {
+        const year = expiration_date.getFullYear();
+        let month = expiration_date.getMonth() + 1;
+        if (month < 10) {
+            month = `0${ month }`;
+        }
+        return `${ year }-${ month }`;
+    }
 
     useEffect(() => {
         setLoading(true);
@@ -26,13 +35,16 @@ export default function AccountPage({ userId }) {
                 .then(async response => {
                     const jsonResponse = await response.json()
                     if (response.ok) {
+                        const expiration_date = new Date(jsonResponse.card_expiration);
+                        const expiration_date_formatted = formatExpirationDate(expiration_date);
                         setCustomerId(jsonResponse.id)
                         setAccount({
+                            ...account,
                             shippingAddress: jsonResponse.shipping_address,
                             billingAddress: jsonResponse.billing_address,
-                            cardNumber: jsonResponse.cardNumber,
-                            cardExpiration: jsonResponse.cardExpiration,
-                            cardHolder: jsonResponse.cardHolder
+                            cardNumber: jsonResponse.card_number,
+                            cardExpiration: expiration_date_formatted,
+                            cardHolder: jsonResponse.card_holder
                         })
                     }
                 })
@@ -71,9 +83,9 @@ export default function AccountPage({ userId }) {
                     setAccount({
                         shippingAddress: jsonResponse.shipping_address,
                         billingAddress: jsonResponse.billing_address,
-                        cardNumber: jsonResponse.cardNumber,
-                        cardExpiration: jsonResponse.cardExpiration,
-                        cardHolder: jsonResponse.cardHolder
+                        cardNumber: jsonResponse.card_number,
+                        cardExpiration: jsonResponse.card_expiration,
+                        cardHolder: jsonResponse.card_holder
                     })
                 }
             })

@@ -18,7 +18,7 @@ async function createUser(credentials) {
                 return { error: await response.json() }
             }
             return {
-                token: response.text()
+                token: await response.text()
             }
         })
 }
@@ -59,23 +59,21 @@ export default function Signup({ setToken }) {
                 <h1>Create Account</h1>
                 <Form.Group>
                     <Form.Label>Email</Form.Label>
-                    <Form.Control type="email" onChange={e => setEmail(e.target.value)}></Form.Control>
+                    <Form.Control name="email" required type="email" onChange={e => setEmail(e.target.value)}></Form.Control>
                 </Form.Group>
                 <Form.Group>
                     <Form.Label>Full Name</Form.Label>
-                    <Form.Control type="text" onChange={e => setFullName(e.target.value)}></Form.Control>
+                    <Form.Control name="full_name" required type="text" onChange={e => setFullName(e.target.value)}></Form.Control>
                 </Form.Group>
                 <Form.Group>
                     <Form.Label>Phone Number</Form.Label>
-                    <Form.Control type="number" onChange={e => setPhoneNumber(e.target.value)}></Form.Control>
+                    <Form.Control name="phone_number" required type="number" onChange={e => setPhoneNumber(e.target.value)}></Form.Control>
                 </Form.Group>
                 <Form.Group>
                     <Form.Label>Password</Form.Label>
-                    <Form.Control type="password" onChange={e => setPassword(e.target.value)}></Form.Control>
+                    <Form.Control name="password" required type="password" onChange={e => setPassword(e.target.value)}></Form.Control>
                 </Form.Group>
-                <div>
-                    <Button type="submit">Submit</Button>
-                </div>
+                <Button type="submit">Submit</Button>
             </Form>
         </div>
     )
