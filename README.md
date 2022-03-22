@@ -1,3 +1,17 @@
+# Prerequisites
+```
+npm
+node
+```
+https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
+
+# Installing
+
+In order to install the required packages run the following command in the project directory:
+```
+npm install
+```
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
