@@ -1,7 +1,7 @@
 # Prerequisites
 ```
 npm
-node
+node >= v14.17.3
 ```
 https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
 

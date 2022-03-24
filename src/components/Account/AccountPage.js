@@ -92,31 +92,33 @@ export default function AccountPage({ userId }) {
     }
 
     return (
-        <div className="account-information d-flex">
-            <Form onSubmit={handleSubmit}>
-                <h1>Account Information</h1>
-                <Form.Group>
-                    <Form.Label>Shipping address</Form.Label>
-                    <Form.Control type="text" defaultValue={account.shippingAddress} onChange={e => setAccount(account => ({ ...account, shippingAddress: e.target.value }))}></Form.Control>
-                </Form.Group>
-                <Form.Group>
-                    <Form.Label>Billing address</Form.Label>
-                    <Form.Control type="text" defaultValue={account.billingAddress} onChange={e => setAccount(account => ({ ...account, billingAddress: e.target.value }))}></Form.Control>
-                </Form.Group>
-                <Form.Group>
-                    <Form.Label>Card number</Form.Label>
-                    <Form.Control type="number" defaultValue={account.cardNumber} onChange={e => setAccount(account => ({ ...account, cardNumber: e.target.value }))}></Form.Control>
-                </Form.Group>
-                <Form.Group>
-                    <Form.Label>Card expiration</Form.Label>
-                    <Form.Control type="month" defaultValue={account.cardExpiration} onChange={e => setAccount(account => ({ ...account, cardExpiration: e.target.value }))}></Form.Control>
-                </Form.Group>
-                <Form.Group>
-                    <Form.Label>Card holder</Form.Label>
-                    <Form.Control type="text" defaultValue={account.cardHolder} onChange={e => setAccount(account => ({ ...account, cardHolder: e.target.value }))}></Form.Control>
-                </Form.Group>
-                <Button type="submit">Submit</Button>
-            </Form>
+        <div>
+            <div className="account-information d-flex">
+                <Form onSubmit={handleSubmit}>
+                    <h1>Account Information</h1>
+                    <Form.Group>
+                        <Form.Label>Shipping address</Form.Label>
+                        <Form.Control id="shipping-address" type="text" defaultValue={account.shippingAddress} onChange={e => setAccount(account => ({ ...account, shippingAddress: e.target.value }))}></Form.Control>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Billing address</Form.Label>
+                        <Form.Control id="billing-address" type="text" defaultValue={account.billingAddress} onChange={e => setAccount(account => ({ ...account, billingAddress: e.target.value }))}></Form.Control>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Card number</Form.Label>
+                        <Form.Control id="card-number" type="number" defaultValue={account.cardNumber} onChange={e => setAccount(account => ({ ...account, cardNumber: e.target.value }))}></Form.Control>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Card expiration</Form.Label>
+                        <Form.Control id="card-expiration" type="month" defaultValue={account.cardExpiration} onChange={e => setAccount(account => ({ ...account, cardExpiration: e.target.value }))}></Form.Control>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Card holder</Form.Label>
+                        <Form.Control id="card-holder" type="text" defaultValue={account.cardHolder} onChange={e => setAccount(account => ({ ...account, cardHolder: e.target.value }))}></Form.Control>
+                    </Form.Group>
+                    <Button type="submit">Submit</Button>
+                </Form>
+            </div>
         </div>
     )
 }
