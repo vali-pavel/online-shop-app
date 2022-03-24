@@ -29,7 +29,7 @@ export default function Checkout({ userId, productId, quantity = 1, setError, se
     }
 
     return (
-        <Button variant="outline-success" onClick={handleCheckout}>1-Click Checkout</Button>
+        <Button id="checkout-button" variant="outline-success" onClick={handleCheckout}>1-Click Checkout</Button>
     )
 }
 
