@@ -48,7 +48,7 @@ function App() {
                     </Route>
                     <Route path='/products/:product_id' element={
                         <PrivateRoute token={token}>
-                            <ProductPage userId={userId} />
+                            <ProductPage userId={userId} userRole={userRole} />
                         </PrivateRoute>}>
                     </Route>
                     <Route path='/account' element={

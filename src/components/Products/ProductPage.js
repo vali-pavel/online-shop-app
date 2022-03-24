@@ -8,7 +8,7 @@ import Checkout from '../Checkout/Checkout';
 
 const tokenString = localStorage.getItem('token');
 
-export default function ProductPage({ userId }) {
+export default function ProductPage({ userId, userRole }) {
     const [product, setProduct] = useState({});
     const [productImages, setProductImages] = useState([]);
     const [quantity, setQuantity] = useState();
@@ -82,13 +82,13 @@ export default function ProductPage({ userId }) {
                 <h1>{product.name}</h1>
                 <div>Price: {product.price}</div>
                 <Form.Control type="number" placeholder="Quantity" min="1" onChange={e => setQuantity(e.target.value)} />
-                <Checkout
+                {userRole === userRoles.Customer && <Checkout
                     userId={userId}
                     productId={parseInt(product_id)}
                     quantity={quantity}
                     setSuccess={setSuccess}
                     setError={setError}>
-                </Checkout>
+                </Checkout>}
             </div>}
         </div>
     )
@@ -96,4 +96,5 @@ export default function ProductPage({ userId }) {
 
 ProductPage.propTypes = {
     userId: PropTypes.number,
+    userRole: PropTypes.number.isRequired,
 }
