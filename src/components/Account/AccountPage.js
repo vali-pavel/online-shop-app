@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Alert } from 'react-bootstrap';
 
+import { alertTypes } from '../enums';
 import './AccountPage.css';
 
 export default function AccountPage({ userId }) {
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState()
     const [account, setAccount] = useState({})
     const [customerId, setCustomerId] = useState()
+    const [alert, setAlert] = useState({ msg: "", type: null })
     const tokenString = localStorage.getItem('token');
 
     const formatExpirationDate = (expiration_date) => {
@@ -87,12 +88,16 @@ export default function AccountPage({ userId }) {
                         cardExpiration: jsonResponse.card_expiration,
                         cardHolder: jsonResponse.card_holder
                     })
+                    setAlert({ msg: "The account was successfully updated.", type: alertTypes.Success })
+                } else {
+                    setAlert({ msg: jsonResponse.error.detail, type: alertTypes.Danger })
                 }
             })
     }
 
     return (
         <div>
+            {alert.type && <Alert variant={alert.type} onClose={() => setAlert({ msg: "", type: null })} dismissible>{alert.msg}</Alert>}
             <div className="account-information d-flex">
                 <Form onSubmit={handleSubmit}>
                     <h1>Account Information</h1>

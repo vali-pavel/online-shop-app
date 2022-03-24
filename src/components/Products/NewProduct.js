@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Alert } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 import './Products.css';
 import { productCategories, productColors } from './enums';
-import { userRoles } from '../enums';
+import { userRoles, alertTypes } from '../enums';
 
 const tokenString = localStorage.getItem('token');
 
@@ -61,7 +61,7 @@ export default function NewProduct({ userId, userRole }) {
     const [category, setCategory] = useState(productCategories.Shoes);
     const [inventory, setInventory] = useState();
     const [files, setFiles] = useState()
-    const [error, setError] = useState()
+    const [alert, setAlert] = useState({ msg: "", type: null })
 
     const handleSubmit = async e => {
         e.preventDefault();
@@ -79,7 +79,9 @@ export default function NewProduct({ userId, userRole }) {
             inventory: inventory
         });
         if (newProduct.error) {
-            setError(newProduct.error.detail)
+            setAlert({ msg: newProduct.error.detail, type: alertTypes.Error })
+        } else {
+            setAlert({ msg: "Product was successfully created.", type: alertTypes.Success })
         }
         if (files) {
             await uploadImages({
@@ -91,7 +93,7 @@ export default function NewProduct({ userId, userRole }) {
 
     return (
         userRole === userRoles.Merchant ? <div className="new-product-wrapper">
-            {error}
+            {alert.type && <Alert variant={alert.type} onClose={() => setAlert({ msg: "", type: null })} dismissible>{alert.msg}</Alert>}
             <Form onSubmit={handleSubmit}>
                 <h1>New Product</h1>
                 <Form.Group>
