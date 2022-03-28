@@ -10,6 +10,7 @@ import ProductsPage from '../Products/ProductsPage';
 import ProductPage from '../Products/ProductPage';
 import PrivateRoute from '../auth/PrivateRoute';
 import AccountPage from '../Account/AccountPage';
+import NotFoundPage from '../NotFoundPage/NotFoundPage';
 import useToken from './useToken';
 import './App.css';
 
@@ -56,6 +57,7 @@ function App() {
                             <AccountPage userId={userId} userRole={userRole} />
                         </PrivateRoute>}>
                     </Route>
+                    <Route path="*" element={<NotFoundPage />} />
                 </Routes>
             </Router>
         </div>
