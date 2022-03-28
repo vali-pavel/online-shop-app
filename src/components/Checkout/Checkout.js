@@ -1,31 +1,24 @@
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 
+import OrderService from '../../services/orderService';
+
 export default function Checkout({ userId, productId, quantity = 1, setError, setSuccess }) {
-    const handleCheckout = () => {
+    const handleCheckout = async () => {
         const tokenString = localStorage.getItem('token');
         const body = {
             user_id: userId,
             product_id: productId,
             quantity: quantity
         }
+        const orderService = new OrderService(tokenString);
+        const orderResponse = await orderService.createOrder(body);
 
-        return fetch('/api/orders', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': tokenString
-            },
-            body: JSON.stringify(body)
-        })
-            .then(async response => {
-                if (!response.ok) {
-                    const errorMessage = await response.json();
-                    setError(errorMessage.detail);
-                } else {
-                    setSuccess(true);
-                }
-            })
+        if (orderResponse.error) {
+            setError(orderResponse.error.detail);
+        } else {
+            setSuccess(true);
+        }
     }
 
     return (
