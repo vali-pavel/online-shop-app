@@ -4,24 +4,8 @@ import { Button, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import './Login.css';
+import UserService from '../../services/userService';
 
-async function loginUser(credentials) {
-    return fetch('/api/users/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(credentials)
-    })
-        .then(async response => {
-            if (!response.ok) {
-                return { error: await response.json() }
-            }
-            return {
-                token: await response.text()
-            }
-        })
-}
 
 export default function Login({ setToken }) {
     const [email, setEmail] = useState();
@@ -30,10 +14,12 @@ export default function Login({ setToken }) {
 
     const handleSubmit = async e => {
         e.preventDefault();
-        const loginResponse = await loginUser({
+        const userService = new UserService();
+        const loginResponse = await userService.loginUser({
             email,
             password
         });
+
         if (loginResponse.token) {
             setToken(loginResponse.token)
             window.location.href = '/products'

@@ -4,24 +4,8 @@ import { Button, Form } from 'react-bootstrap';
 
 import './Signup.css'
 import { userRoles } from '../enums';
+import UserService from '../../services/userService';
 
-async function createUser(credentials) {
-    return fetch('/api/users', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(credentials)
-    })
-        .then(async response => {
-            if (!response.ok) {
-                return { error: await response.json() }
-            }
-            return {
-                token: await response.text()
-            }
-        })
-}
 
 export default function Signup({ setToken }) {
     const [email, setEmail] = useState();
@@ -36,18 +20,20 @@ export default function Signup({ setToken }) {
         const pathname = window.location.pathname;
         const userRole = pathname.includes('admin') ? userRoles.Merchant : userRoles.Customer;
 
-        const response = await createUser({
+        const userService = new UserService();
+        const response = await userService.createUser({
             email: email,
             password: password,
             phone_number: parseInt(phoneNumber),
             full_name: fullName,
-            role_type: userRole
+            role_type: userRole,
         });
+
         if (response.token) {
-            setToken(response.token)
-            window.location.href = '/products'
+            setToken(response.token);
+            window.location.href = '/products';
         } else {
-            setError(response.error.detail)
+            setError(response.error.detail);
         }
     }
 
