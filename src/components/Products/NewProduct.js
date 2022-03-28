@@ -5,50 +5,9 @@ import PropTypes from 'prop-types';
 import './Products.css';
 import { productCategories, productColors } from './enums';
 import { userRoles, alertTypes } from '../enums';
+import ProductService from '../../services/productService';
 
 const tokenString = localStorage.getItem('token');
-
-async function createProduct(newProduct) {
-    return fetch('/api/products', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'authorization': tokenString
-        },
-        body: JSON.stringify(newProduct)
-    })
-        .then(async response => {
-            const jsonResponse = await response.json()
-            if (!response.ok) {
-                return { error: jsonResponse }
-            } else {
-                return jsonResponse
-            }
-
-        })
-}
-
-async function uploadImages({ productId, images }) {
-    let formData = new FormData();
-    formData.append("product_id", productId);
-    for (const image of Array.from(images)) {
-        formData.append('files', new Blob([image]), image.name)
-    }
-
-    return fetch('/api/products/upload', {
-        method: 'POST',
-        headers: {
-            'authorization': tokenString
-        },
-        body: formData
-    })
-        .then(async response => {
-            if (!response.ok) {
-                return { error: await response.json() }
-            }
-        })
-}
 
 export default function NewProduct({ userId, userRole }) {
     const [sku, setSku] = useState();
@@ -66,7 +25,8 @@ export default function NewProduct({ userId, userRole }) {
     const handleSubmit = async e => {
         e.preventDefault();
 
-        const newProduct = await createProduct({
+        const productService = new ProductService(tokenString);
+        const newProduct = await productService.createProduct({
             user_id: userId,
             sku: sku,
             name: name,
@@ -78,16 +38,20 @@ export default function NewProduct({ userId, userRole }) {
             category: category,
             inventory: inventory
         });
+
         if (newProduct.error) {
             setAlert({ msg: newProduct.error.detail, type: alertTypes.Error })
         } else {
             setAlert({ msg: "Product was successfully created.", type: alertTypes.Success })
         }
+
         if (files) {
-            await uploadImages({
-                productId: newProduct.id,
-                images: files
-            })
+            let formData = new FormData();
+            formData.append("product_id", newProduct.id);
+            for (const image of Array.from(files)) {
+                formData.append('files', new Blob([image]), image.name);
+            }
+            await productService.uploadImages(formData);
         }
     }
 

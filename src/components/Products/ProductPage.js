@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 
 import { userRoles } from '../enums';
 import Checkout from '../Checkout/Checkout';
+import ProductService from '../../services/productService';
 
 const tokenString = localStorage.getItem('token');
 
@@ -20,45 +21,25 @@ export default function ProductPage({ userId, userRole }) {
     useEffect(() => {
         setLoading(true);
         async function getProduct() {
-            const requestUrl = `/api/products/${ product_id }`;
+            const productService = new ProductService(tokenString);
+            const productResponse = await productService.getProduct(product_id)
 
-            return fetch(requestUrl, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'authorization': tokenString
-                },
-            })
-                .then(async response => {
-                    const jsonResponse = await response.json()
-                    if (!response.ok) {
-                        setError(jsonResponse.error.detail)
-                    } else {
-                        setProduct(jsonResponse)
-                    }
-
-                })
+            if (productResponse.error) {
+                setError(productResponse.error.detail);
+            } else {
+                setProduct(productResponse);
+            }
         }
 
         async function getProductImages() {
-            return fetch(`/api/products/${ product_id }/images`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'authorization': tokenString
-                }
-            })
-                .then(async response => {
-                    const jsonResponse = await response.json()
-                    if (!response.ok) {
-                        return { error: jsonResponse }
-                    } else {
-                        setProductImages(jsonResponse)
-                    }
+            const productService = new ProductService(tokenString);
+            const productResponse = await productService.getImages(product_id)
 
-                })
+            if (productResponse.error) {
+                setError(productResponse.error.detail);
+            } else {
+                setProductImages(productResponse);
+            }
         }
 
         getProduct();
@@ -72,8 +53,8 @@ export default function ProductPage({ userId, userRole }) {
             {error && <Alert variant="danger" onClose={() => setError(null)} dismissible>{error}</Alert>}
             {success && <Alert variant="success" onClose={() => setSuccess(false)} dismissible>Order was submitted</Alert>}
             {productImages.length > 0 && <Carousel className="img-carousel">
-                {productImages.map(image =>
-                    <Carousel.Item>
+                {productImages.map((image, index) =>
+                    <Carousel.Item key={index}>
                         <img className="d-block w-100" src={`data:image/jpeg;base64,${ image }`} />
                     </Carousel.Item>
                 )}

@@ -8,12 +8,13 @@ import PaginationComponent from './Pagination';
 import { productCategories } from './enums';
 import './Products.css';
 import { Link } from 'react-router-dom';
+import ProductService from '../../services/productService';
 
 const tokenString = localStorage.getItem('token');
 
 const getProductKey = (value) => {
     for (let key in productCategories) {
-        if (productCategories[key] == value) {
+        if (productCategories[key] === value) {
             return key;
         }
     }
@@ -31,27 +32,17 @@ export default function ProductsPage({ userId, userRole }) {
     useEffect(() => {
         setLoading(true);
         async function getProducts() {
-            const requestUrl = userRole === userRoles.Merchant ?
-                `/api/products?user_id=${ userId }&page_number=${ currentPage }` :
-                `/api/products?page_number=${ currentPage }&category=${ category }`;
+            const productService = new ProductService(tokenString);
+            const queryString = userRole === userRoles.Merchant ?
+                `user_id=${ userId }&page_number=${ currentPage }` :
+                `page_number=${ currentPage }&category=${ category }`;
+            const productResponse = await productService.getAllProducts(queryString)
 
-            return fetch(requestUrl, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'authorization': tokenString
-                },
-            })
-                .then(async response => {
-                    const jsonResponse = await response.json()
-                    if (!response.ok) {
-                        setError(jsonResponse.error.detail)
-                    } else {
-                        setProducts(jsonResponse)
-                    }
-
-                })
+            if (productResponse.error) {
+                setError(productResponse.error.detail);
+            } else {
+                setProducts(productResponse);
+            }
         }
         getProducts();
         setLoading(false)

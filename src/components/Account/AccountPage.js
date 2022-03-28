@@ -3,6 +3,7 @@ import { Button, Form, Alert } from 'react-bootstrap';
 
 import { alertTypes } from '../enums';
 import './AccountPage.css';
+import CustomerService from '../../services/customerService';
 
 export default function AccountPage({ userId }) {
     const [loading, setLoading] = useState(false);
@@ -22,33 +23,26 @@ export default function AccountPage({ userId }) {
 
     useEffect(() => {
         setLoading(true);
-        async function getCustomer() {
-            const requestUrl = `/api/customers/${ userId }`;
 
-            return fetch(requestUrl, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'authorization': tokenString
-                },
-            })
-                .then(async response => {
-                    const jsonResponse = await response.json()
-                    if (response.ok) {
-                        const expiration_date = new Date(jsonResponse.card_expiration);
-                        const expiration_date_formatted = formatExpirationDate(expiration_date);
-                        setCustomerId(jsonResponse.id)
-                        setAccount({
-                            ...account,
-                            shippingAddress: jsonResponse.shipping_address,
-                            billingAddress: jsonResponse.billing_address,
-                            cardNumber: jsonResponse.card_number,
-                            cardExpiration: expiration_date_formatted,
-                            cardHolder: jsonResponse.card_holder
-                        })
-                    }
+        async function getCustomer() {
+            const customerService = new CustomerService(tokenString);
+            const customer = await customerService.getCustomer(userId);
+
+            if (customer.error) {
+                setAlert({ msg: customer.error.detail, type: alertTypes.Error })
+            } else {
+                const expiration_date = new Date(customer.card_expiration);
+                const expiration_date_formatted = formatExpirationDate(expiration_date);
+                setCustomerId(customer.id);
+                setAccount({
+                    ...account,
+                    shippingAddress: customer.shipping_address,
+                    billingAddress: customer.billing_address,
+                    cardNumber: customer.card_number,
+                    cardExpiration: expiration_date_formatted,
+                    cardHolder: customer.card_holder
                 })
+            }
         }
         getCustomer();
         setLoading(false)
@@ -57,8 +51,7 @@ export default function AccountPage({ userId }) {
     const handleSubmit = async e => {
         e.preventDefault();
 
-        const requestUrl = customerId ? `/api/customers/${ userId }` : `/api/customers/`;
-        const requestMethod = customerId ? 'PUT' : 'POST';
+        const customerService = new CustomerService(tokenString);
         const body = {
             user_id: userId,
             shipping_address: account.shippingAddress,
@@ -68,32 +61,27 @@ export default function AccountPage({ userId }) {
             card_holder: account.cardHolder
         }
 
-        return fetch(requestUrl, {
-            method: requestMethod,
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'authorization': tokenString
-            },
-            body: JSON.stringify(body)
-        })
-            .then(async response => {
-                const jsonResponse = await response.json()
-                if (response.ok) {
-                    setCustomerId(jsonResponse.id)
-                    setAccount({
-                        shippingAddress: jsonResponse.shipping_address,
-                        billingAddress: jsonResponse.billing_address,
-                        cardNumber: jsonResponse.card_number,
-                        cardExpiration: jsonResponse.card_expiration,
-                        cardHolder: jsonResponse.card_holder
-                    })
-                    setAlert({ msg: "The account was successfully updated.", type: alertTypes.Success })
-                } else {
-                    setAlert({ msg: jsonResponse.error.detail, type: alertTypes.Danger })
-                }
+        let customer;
+        if (customerId) {
+            customer = await customerService.updateCustomer(body, userId);
+        } else {
+            customer = await customerService.createCustomer(body);
+        }
+        if (customer.error) {
+            setAlert({ msg: customer.error.detail, type: alertTypes.Danger })
+        } else {
+            setCustomerId(customer.id);
+            setAccount({
+                shippingAddress: customer.shipping_address,
+                billingAddress: customer.billing_address,
+                cardNumber: customer.card_number,
+                cardExpiration: customer.card_expiration,
+                cardHolder: customer.card_holder
             })
+            setAlert({ msg: "The account was successfully updated.", type: alertTypes.Success })
+        }
     }
+
 
     return (
         <div>
