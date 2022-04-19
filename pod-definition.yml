@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: frontend-pod
+  labels:
+    app: shop-service
+    name: frontend-pod
+spec:
+  containers:
+    - name: frontend
+      image: frontend
+      ports:
+        - containerPort: 3000
+      imagePullPolicy: Never
+  automountServiceAccountToken: false

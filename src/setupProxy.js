@@ -3,25 +3,25 @@ const { createProxyMiddleware } = require('http-proxy-middleware')
 module.exports = function (app) {
     app.use(
         createProxyMiddleware('/api/users', {
-            target: 'http://localhost:8001/',
+            target: 'http://shopnet.service',
             changeOrigin: true,
         })
     );
     app.use(
         createProxyMiddleware('/api/customers', {
-            target: 'http://localhost:8002/',
+            target: 'http://shopnet.service',
             changeOrigin: true,
         })
     );
     app.use(
         createProxyMiddleware('/api/products', {
-            target: 'http://localhost:8003/',
+            target: 'http://shopnet.service',
             changeOrigin: true,
         })
     );
     app.use(
         createProxyMiddleware('/api/orders', {
-            target: 'http://localhost:8004/',
+            target: 'http://shopnet.service',
             changeOrigin: true,
         })
     );
